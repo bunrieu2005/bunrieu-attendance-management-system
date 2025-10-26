@@ -1,0 +1,24 @@
+# Maven build
+target/
+*.jar
+*.war
+*.ear
+
+# IDE folders
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+
+# OS junk files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+
+# Spring Boot config (optional local)
+application-dev.properties
