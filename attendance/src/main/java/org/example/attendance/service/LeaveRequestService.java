@@ -1,0 +1,41 @@
+package org.example.attendance.service;
+
+import org.example.attendance.entity.Employee;
+import org.example.attendance.entity.LeaveRequest;
+import org.example.attendance.repository.LeaveRequestRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class LeaveRequestService
+{
+    @Autowired
+    LeaveRequestRepo leaveRequestRepo;
+    //1: CRUD leaveRequest
+    //2:Lọc theo nv , trạng thái,loại nghĩ
+    //3: duyệt , từ chối nghĩ ( mở rộng : xác nhận admin)
+    public List<LeaveRequest> getAllLeaveRequest()
+    {
+        return leaveRequestRepo.findAll();
+    }
+    public Optional<LeaveRequest> getLeaveRequestById(long id){
+        return  leaveRequestRepo.findById(id);
+    }
+    public List<LeaveRequest> getLeaveRequestByEmployeeId(long employeeId){
+                return leaveRequestRepo.findByEmployeeId(employeeId);
+    }
+    public List<LeaveRequest> getByStatus(String status){
+        return leaveRequestRepo.getLeaveRequestByStatus(status);
+    }
+    public LeaveRequest saveLeaveRequest(LeaveRequest leaveRequest){
+        return leaveRequestRepo.save(leaveRequest);
+    }
+
+    public void deleteLeaveRequestById(long id){
+        leaveRequestRepo.deleteById(id);
+    }
+
+}
