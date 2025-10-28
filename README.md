@@ -5,8 +5,8 @@ A Spring Boot-based attendance management application for employees, departments
 ## Status
 - ✅ Database + Entities completed
 - ✅ CRUD API for all modules
-- 🔄 Next: QR/IP Check-in module
-- ⏳ Future: React Frontend + JWT Auth
+- 🔄 Next:  Spring Security / JWT Auth
+- ⏳ Future: Angular Frontend 
 
 ## Run
 - Start: `mvn spring-boot:run`
