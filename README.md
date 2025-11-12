@@ -5,7 +5,8 @@ A Spring Boot-based attendance management application for employees, departments
 ## Status
 - ✅ Database + Entities completed
 - ✅ CRUD API for all modules
-- 🔄 Next:  Spring Security / JWT Auth
+- ✅ Spring Security / JWT Auth
+- 🚀 TODO:  More APIs & Features
 - ⏳ Future: Angular Frontend 
 
 ## Run
@@ -15,3 +16,8 @@ A Spring Boot-based attendance management application for employees, departments
 ## Author
 - **Tân Trần Vũ (bunrieu)**
 - University of Sciences – Hue (HUSC)
+## Notes
+Current focus: Backend API development
+Frontend (Angular) will start after backend completion
+Consider Docker deployment after Phase 5
+Plan for CI/CD pipeline (GitHub Actions)
