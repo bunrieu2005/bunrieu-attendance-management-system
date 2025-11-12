@@ -17,10 +17,8 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private long id;
-
     @Column(name="name",nullable = false,length=100)
     private String name;
-
     @Column(name="email",nullable = false,length=120)
     private String email;
     @Column(name="password",nullable = false)

@@ -43,11 +43,9 @@ public class AttendanceRestController {
         attendanceService.saveAttendance(attendance);
         return ResponseEntity.ok().build();
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAttendanceById(@PathVariable Long id) {
         attendanceService.deleteAttendanceById(id);
         return ResponseEntity.ok("Deleted attendance id = " + id);
     }
-
 }

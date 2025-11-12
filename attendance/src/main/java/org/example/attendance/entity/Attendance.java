@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Table
@@ -16,16 +17,20 @@ public class Attendance {
     @Column(name="word_date",nullable=false)
     private LocalDate workDate;
     @Column(name="check_in_at",nullable=false)
-    private LocalDate checkInAt;
+    private LocalDateTime checkInAt;
     @Column(name="check_out_at")
-    private LocalDate checkOutAt;
+    private LocalDateTime checkOutAt;
     @Column(name="total_minutes")
     private Integer totalMinutes;
-    @Column(name="late_flag_",nullable=false)
-    private boolean lateFlag;
+    @Column(name="late_flag",nullable=false)
+    private int lateFlag;
     @Column(name="early_leave_flag",nullable=false)
-    private boolean earlyLeaveFlag;
+    private int earlyLeaveFlag;
     @ManyToOne
     @JoinColumn(name="employee_id",referencedColumnName = "id")
     private Employee employee;
+    @Column
+    private String method;
+    @Column
+    private String ip;
 }

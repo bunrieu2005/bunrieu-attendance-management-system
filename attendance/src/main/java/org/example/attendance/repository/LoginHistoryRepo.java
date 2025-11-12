@@ -10,10 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface  LoginHistoryRepo extends JpaRepository<LoginHistory,Long> {
-
-
     Optional<LoginHistory> getLoginHistoryById(long id);
-
     List<LoginHistory> getLoginByEmployeeId(long employeeId);
-
 }

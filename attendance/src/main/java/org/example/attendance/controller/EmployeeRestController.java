@@ -11,25 +11,20 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/employees")
-@CrossOrigin("*")
 public class EmployeeRestController {
-
     @Autowired
     private EmployeeService employeeService;
-
     @GetMapping
     public ResponseEntity<List<Employee>> getAllEmployees() {
         List<Employee> employees = employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
     }
-
     @GetMapping("/id/{id}")
     public ResponseEntity<?> getEmployeeById(@PathVariable Long id) {
         Optional<Employee> employee = employeeService.getEmployeeById(id);
         return employee.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
     @GetMapping("/email/{email}")
     public ResponseEntity<?> getEmployeeByEmail(@PathVariable String email) {
         Optional<Employee> employee = employeeService.getEmployeeByEmail(email);
@@ -48,7 +43,6 @@ public class EmployeeRestController {
         Employee save = employeeService.saveEmployee(employee);
         return ResponseEntity.ok(save);
     }
-
     @PutMapping("/{id}")
     public ResponseEntity<?> updateEmployee(@PathVariable long id, @RequestBody Employee employee) {
         Optional<Employee> exists = employeeService.getEmployeeById(id);
