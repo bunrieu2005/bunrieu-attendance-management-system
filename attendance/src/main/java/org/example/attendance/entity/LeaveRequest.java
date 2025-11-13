@@ -16,16 +16,12 @@ public class LeaveRequest {
     private Long id;
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
-
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
-
     @Column(name = "reason", length = 255)
     private String reason;
-
     @Column(name = "type", length = 30)
     private String type;
-
     @Column(name = "status", length = 20)
     private String status;
     @ManyToOne

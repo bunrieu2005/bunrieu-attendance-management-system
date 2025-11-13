@@ -12,33 +12,24 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/departments")
 public class DepartmentRestController {
-
     @Autowired
     private DepartmentService departmentService;
-
-
     @GetMapping
     public ResponseEntity<List<Department>> getAllDepartments() {
         List<Department> departments = departmentService.getAllDepartments();
         return ResponseEntity.ok(departments);
     }
-
-
     @GetMapping("/id/{id}")
     public ResponseEntity<?> getDepartmentById(@PathVariable Long id) {
         Optional<Department> dept = departmentService.getDepartmentById(id);
         return dept.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-
     @PostMapping
     public ResponseEntity<Department> addDepartment(@RequestBody Department department) {
         Department saved = departmentService.saveDepartment(department);
         return ResponseEntity.ok(saved);
     }
-
-
     @PutMapping("/{id}")
     public ResponseEntity<?> updateDepartment(@PathVariable Long id, @RequestBody Department department) {
         Optional<Department> existing = departmentService.getDepartmentById(id);
@@ -49,7 +40,6 @@ public class DepartmentRestController {
         Department updated = departmentService.saveDepartment(department);
         return ResponseEntity.ok(updated);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteDepartment(@PathVariable Long id) {
         Optional<Department> existing = departmentService.getDepartmentById(id);

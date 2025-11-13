@@ -19,7 +19,6 @@ public interface AttendanceRepo extends JpaRepository<Attendance,Long> {
     // dung khi nhan vien muon check out
     Optional<Attendance> findTopByEmployeeIdAndCheckOutAtIsNullOrderByCheckInAtDesc(long employeeId);
     //lay danh sach cham cong trong time:xuat bao cao theo ngay
-
     @Query("SELECT a FROM Attendance a WHERE a.employee.id = :empId AND a.workDate BETWEEN :from AND :to")
     List<Attendance> findRange(@Param("empId") Long empId, @Param("from") LocalDate from, @Param("to") LocalDate to);
 
