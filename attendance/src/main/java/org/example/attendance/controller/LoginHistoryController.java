@@ -1,7 +1,6 @@
 package org.example.attendance.controller;
 
 import org.example.attendance.entity.LoginHistory;
-import org.example.attendance.repository.LoginHistoryRepo;
 import org.example.attendance.service.LoginHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/loginhistorys")
-public class LoginHistoryRestController {
+public class LoginHistoryController {
     @Autowired
     private LoginHistoryService loginHistoryService;
     @GetMapping

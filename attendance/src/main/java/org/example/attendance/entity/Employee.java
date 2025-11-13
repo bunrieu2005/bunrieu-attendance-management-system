@@ -12,7 +12,6 @@ import java.util.prefs.Preferences;
 @Entity
 @Table(name="employees")
 public class Employee {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
@@ -39,13 +38,13 @@ public class Employee {
     @Column(name="hireDate")
     private LocalDate hireDate;
     @JsonIgnore
-    // 1 nhan vien  - N attendance
+    // 1 employee  - N attendance
     @OneToMany(mappedBy = "employee",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Attendance> attendances;
     //1 employee - N leaveRequest
     @OneToMany(mappedBy = "employee",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<LeaveRequest> leaveRequests;
-    //1 nhan vien  - N loginHistory
+    //1 employee - N loginHistory
     @OneToMany(mappedBy ="employee",cascade = CascadeType.ALL,fetch = FetchType.LAZY )
     private List<LoginHistory>  loginHistories;
 }

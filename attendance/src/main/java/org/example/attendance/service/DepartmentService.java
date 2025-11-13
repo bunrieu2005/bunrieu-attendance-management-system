@@ -13,10 +13,6 @@ import java.util.Optional;
 public class DepartmentService {
     @Autowired
     private DepartmentRepo departmentRepo;
-    //1: lấy tất cả các phòng ban
-    //2: lấy phòng ban theo id
-    //3: thêm hoăc cập nhật phòng ban
-    //4: xoá phòng ban
     public List<Department> getAllDepartments(){
         return departmentRepo.findAll();
     }

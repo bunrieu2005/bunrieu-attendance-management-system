@@ -13,9 +13,9 @@ import java.util.Optional;
 public class AttendanceService {
     @Autowired
     private AttendanceRepo attendanceRepo;
-    //1:ghi nhận giờ vào ra
-    //2: lấy danh sách chấm công theo nhân viên ,ngày
-    //3:tính tổng giờ hàm
+    //1:save time check in , check out
+    //2:get attendance list by employee, date
+    //3:calculate total function hours
     public List<Attendance> getAllAttendance(){
         return attendanceRepo.findAll();
     }

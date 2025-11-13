@@ -13,9 +13,6 @@ public class LoginHistoryService
 {
     @Autowired
     private LoginHistoryRepo loginHistoryRepo;
-    //1: ghi log dang nhap , dang xuat
-    //2:lay lich su  dang nhap theo nhan vien
-    //3:mo rong :+ login sau nay
     public List<LoginHistory> getAllLoginHistory()
     {
         return loginHistoryRepo.findAll();

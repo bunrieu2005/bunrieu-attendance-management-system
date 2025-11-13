@@ -2,10 +2,8 @@ package org.example.attendance.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 @Data
 @Table
 @Entity
@@ -13,7 +11,7 @@ public class Attendance {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
-      private long id;
+    private long id;
     @Column(name="word_date",nullable=false)
     private LocalDate workDate;
     @Column(name="check_in_at",nullable=false)

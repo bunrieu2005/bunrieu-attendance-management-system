@@ -1,20 +1,19 @@
 package org.example.attendance.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.example.attendance.dto.ReportDTO;
 import org.example.attendance.entity.Attendance;
 import org.example.attendance.service.CheckinService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.Optional;
-
+// employee post request:
+//   ↓
+//   POST /api/attendances/check-in/{employeeId}
 @RestController
 @RequestMapping("/api/attendances")
-public class CheckinRestController {
+public class CheckinController {
     @Autowired
     private CheckinService checkinService;
     @PostMapping("/check-in/{employeeId}")
@@ -31,16 +30,4 @@ public class CheckinRestController {
         Attendance result = checkinService.checkOut(employeeId);
         return ResponseEntity.ok(result);
     }
-    @GetMapping("/report")
-    public ResponseEntity<?> report(
-            @RequestParam Long employeeId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
-        from = LocalDate.parse(from.toString().trim());
-        to = LocalDate.parse(to.toString().trim());
-        ReportDTO report = checkinService.reportMonthly(employeeId, from, to);
-        return ResponseEntity.ok(report);
-    }
-
-
 }

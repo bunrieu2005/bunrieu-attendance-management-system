@@ -1,7 +1,6 @@
 package org.example.attendance.dto;
 
 import lombok.Data;
-
 @Data
 public class RegisterRequest {
     private String name;

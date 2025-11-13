@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-//api cho login/register
+//POST api/auth/login: {username(tan) + password(123456)
+// get request ,  call Authservice
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin("*")
-public class AuthRestController {
+public class AuthController {
     @Autowired
     private AuthService authService;
     @PostMapping("/register")
@@ -21,5 +21,8 @@ public class AuthRestController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+        /// HTTP 200 OK { token{}, email{}│
+        //│   fronted   save token : localStorage.setItem('token', response.token)               │
+        //│            navigate to /dashboard
     }
 }

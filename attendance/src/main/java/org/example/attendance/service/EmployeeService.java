@@ -13,9 +13,6 @@ import java.util.Optional;
 public class EmployeeService {
     @Autowired
     private EmployeeRepo employeeRepo;
-    // 1: CRUD employee
-    // 2 : tìm theo email, phòng ban , trạng thái
-    // 3: đăng nhập ( security)
     public List<Employee> getAllEmployees(){
         return employeeRepo.findAll();
     }

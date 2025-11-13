@@ -5,7 +5,6 @@ import org.example.attendance.service.AttendanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -14,8 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(("/api/attendances"))
-
-public class AttendanceRestController {
+public class AttendanceController {
     @Autowired
     private AttendanceService attendanceService;
     @GetMapping

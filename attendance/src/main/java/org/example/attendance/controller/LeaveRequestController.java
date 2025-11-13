@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/leaverequests")
-public class LeaveRequestRestController {
+public class LeaveRequestController {
     @Autowired
     private LeaveRequestService leaveRequestService;
     @GetMapping

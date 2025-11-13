@@ -12,7 +12,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/employees")
 @CrossOrigin(origins = "http://localhost:4200")
-public class EmployeeRestController {
+public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
     @GetMapping
@@ -32,7 +32,6 @@ public class EmployeeRestController {
         return employee.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
     @GetMapping("/status/{status}")
     public ResponseEntity<?> getEmployeeByStatus(@PathVariable String status) {
         List<Employee> employees = employeeService.getEmployeeByStatus(status);
@@ -54,7 +53,6 @@ public class EmployeeRestController {
         Employee updated = employeeService.saveEmployee(employee);
         return ResponseEntity.ok(updated);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEmployee(@PathVariable long id) {
         Optional<Employee> exists = employeeService.getEmployeeById(id);
@@ -64,7 +62,6 @@ public class EmployeeRestController {
         employeeService.deleteEmployee(id);
         return ResponseEntity.ok("Complete delete employee id = " + id);
     }
-
     @GetMapping("/department/{departmentId}")
     public ResponseEntity<?> getEmployeeByDepartment(@PathVariable Long departmentId) {
         List<Employee> list = employeeService.getDepartmentById(departmentId);

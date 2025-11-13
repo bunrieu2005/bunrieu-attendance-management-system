@@ -35,15 +35,14 @@ public class AuthService {
         employeeRepo.save(e);
         return "register success!";
     }
-
     public LoginResponse login(LoginRequest request) {
         Employee e = employeeRepo.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("email not found!"));
         if (!passwordEncoder.matches(request.getPassword(), e.getPassword())) {
-            throw new RuntimeException("Invalid password!");
+            throw new RuntimeException("invalid password!");
         }
-
-        String token = jwtUtils.generateToken(e.getEmail(), e.getRole());
+        //create loginresponse
+        String token = jwtUtils.generateToken(e.getEmail(), e.getRole()); //create  jwt token
         return new LoginResponse(e.getEmail(), e.getRole(), token);
     }   
 }

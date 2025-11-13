@@ -14,9 +14,6 @@ public class LeaveRequestService
 {
     @Autowired
     LeaveRequestRepo leaveRequestRepo;
-    //1: CRUD leaveRequest
-    //2:Lọc theo nv , trạng thái,loại nghĩ
-    //3: duyệt , từ chối nghĩ ( mở rộng : xác nhận admin)
     public List<LeaveRequest> getAllLeaveRequest()
     {
         return leaveRequestRepo.findAll();
