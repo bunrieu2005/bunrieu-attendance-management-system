@@ -1,4 +1,4 @@
-package com.yourpackage.config;
+package org.example.attendance.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

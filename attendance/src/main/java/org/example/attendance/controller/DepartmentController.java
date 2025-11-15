@@ -1,6 +1,8 @@
 package org.example.attendance.controller;
 
+import org.example.attendance.dto.DepartmentDTO;
 import org.example.attendance.entity.Department;
+import org.example.attendance.mapper.DepartmentMapper;
 import org.example.attendance.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,10 @@ public class DepartmentController {
     @Autowired
     private DepartmentService departmentService;
     @GetMapping
-    public ResponseEntity<List<Department>> getAllDepartments() {
+    public ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
         List<Department> departments = departmentService.getAllDepartments();
-        return ResponseEntity.ok(departments);
+        List<DepartmentDTO> dtoList= DepartmentMapper.toDTOList(departments);
+        return ResponseEntity.ok(dtoList);
     }
     @GetMapping("/id/{id}")
     public ResponseEntity<?> getDepartmentById(@PathVariable Long id) {

@@ -6,6 +6,7 @@ import org.example.attendance.mapper.EmployeeMapper;
 import org.example.attendance.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.Optional;
 @RequestMapping("/api/employees")
 @CrossOrigin(origins = "http://localhost:4200")
 public class EmployeeController {
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Autowired
     private EmployeeService employeeService;
     @GetMapping
@@ -48,13 +51,29 @@ public class EmployeeController {
         return ResponseEntity.ok(save);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEmployee(@PathVariable long id, @RequestBody Employee employee) {
-        Optional<Employee> exists = employeeService.getEmployeeById(id);
-        if (exists.isEmpty()) {
+    public ResponseEntity<?> updateEmployee(
+            @PathVariable long id,
+            @RequestBody Employee employee
+    ) {
+        Optional<Employee> existingOpt = employeeService.getEmployeeById(id);
+        if (existingOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        employee.setId(id);
-        Employee updated = employeeService.saveEmployee(employee);
+        Employee existing = existingOpt.get();
+        existing.setName(employee.getName());
+        existing.setEmail(employee.getEmail());
+        existing.setDob(employee.getDob());
+        existing.setGender(employee.getGender());
+        existing.setRole(employee.getRole());
+        existing.setStatus(employee.getStatus());
+        existing.setHireDate(employee.getHireDate());
+        if (employee.getPassword() != null &&
+                !employee.getPassword().isEmpty() &&
+                !employee.getPassword().isBlank()) {
+            String encodedPassword = passwordEncoder.encode(employee.getPassword());
+            existing.setPassword(encodedPassword);
+        }
+        Employee updated = employeeService.saveEmployee(existing);
         return ResponseEntity.ok(updated);
     }
     @DeleteMapping("/{id}")
@@ -64,7 +83,7 @@ public class EmployeeController {
             return ResponseEntity.notFound().build();
         }
         employeeService.deleteEmployee(id);
-        return ResponseEntity.ok("Complete delete employee id = " + id);
+        return ResponseEntity.ok().build();
     }
     @GetMapping("/department/{departmentId}")
     public ResponseEntity<?> getEmployeeByDepartment(@PathVariable Long departmentId) {

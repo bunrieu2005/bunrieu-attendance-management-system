@@ -10,5 +10,8 @@ public class EmployeeDTO {
         private Long id;
         private String name;
         private LocalDate dob;
+        private String email;
         private String role;
+        private String gender;
+        private LocalDate hireDate;
 }
