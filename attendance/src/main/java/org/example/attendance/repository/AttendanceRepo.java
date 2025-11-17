@@ -14,9 +14,9 @@ import java.util.Optional;
 public interface AttendanceRepo extends JpaRepository<Attendance,Long> {
     List<Attendance> findByEmployee_Id(long id);
     List<Attendance> findByWorkDate(LocalDate workDate);
-    //check checkin in day
-    Optional<Attendance> findByEmployeeIdAndWorkDate(long id,LocalDate workDate);
-    //  user : employee want checkout
+    Optional<Attendance> findByEmployeeIdAndWorkDate(long id, LocalDate workDate);
     Optional<Attendance> findTopByEmployeeIdAndCheckOutAtIsNullOrderByCheckInAtDesc(long employeeId);
-
+    @Query("SELECT COUNT(a) FROM Attendance a WHERE a.workDate = :date AND a.checkOutAt IS NULL")
+    long countByWorkDateAndCheckOutAtIsNull(@Param("date") LocalDate date);
+    List<Attendance> findByWorkDateAndCheckOutAtIsNull(LocalDate workDate);
 }

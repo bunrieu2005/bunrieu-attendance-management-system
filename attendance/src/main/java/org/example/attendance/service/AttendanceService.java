@@ -34,5 +34,15 @@ public class AttendanceService {
     public void deleteAttendanceById(Long id){
         attendanceRepo.deleteById(id);
     }
+ //add method
+ public long countWorkingToday(LocalDate date) {
+     return attendanceRepo.countByWorkDateAndCheckOutAtIsNull(date);
+ }
+    public List<Attendance> findByDateAndCheckOutIsNull(LocalDate date) {
+        return attendanceRepo.findByWorkDateAndCheckOutAtIsNull(date);
+    }
+    public List<Attendance> findByDate(LocalDate date) {
+        return attendanceRepo.findByWorkDate(date);  // Dùng method đã có
+    }
 
 }

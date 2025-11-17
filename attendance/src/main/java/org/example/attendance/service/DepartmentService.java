@@ -21,7 +21,7 @@ public class DepartmentService {
     }
     public Department saveDepartment(Department department){
         if(departmentRepo.existsByName(department.getName())){
-            throw new RuntimeException("Department name already exists !!!");
+            throw new RuntimeException("department name already exists ");
         }
         return departmentRepo.save(department);
     }

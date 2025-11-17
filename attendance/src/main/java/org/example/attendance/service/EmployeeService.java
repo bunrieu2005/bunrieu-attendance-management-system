@@ -34,4 +34,7 @@ public class EmployeeService {
     public void deleteEmployee(Long id){
         employeeRepo.deleteById(id);
     }
+    public long  countAll(){
+        return employeeRepo.count();
+    }
 }

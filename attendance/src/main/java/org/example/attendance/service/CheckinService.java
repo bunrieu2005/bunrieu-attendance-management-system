@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
-
 @Service
 public class CheckinService {
 
@@ -20,7 +19,6 @@ public class CheckinService {
         Employee emp = employeeRepo.findById(empId)
                 .orElseThrow(() -> new IllegalArgumentException("employee not found"));
         LocalDate today = LocalDate.now();
-
         if (attendanceRepo.findByEmployeeIdAndWorkDate(empId, today).isPresent()) {
             throw new IllegalStateException("already checked in today");
         }
@@ -35,7 +33,6 @@ public class CheckinService {
         } else {
             a.setLateFlag(0);
         }
-
         a.setEarlyLeaveFlag(0);
         return attendanceRepo.save(a);
     }
@@ -43,7 +40,6 @@ public class CheckinService {
         Attendance a = attendanceRepo
                 .findTopByEmployeeIdAndCheckOutAtIsNullOrderByCheckInAtDesc(empId)
                 .orElseThrow(() -> new IllegalStateException("no active check-in record"));
-
         a.setCheckOutAt(LocalDateTime.now());
         // calculate total work minute
         long minutes = Duration.between(a.getCheckInAt(), a.getCheckOutAt()).toMinutes();

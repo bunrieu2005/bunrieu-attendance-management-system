@@ -17,6 +17,7 @@ public class EmployeeMapper {
         dto.setRole(employee.getRole());
         dto.setGender(employee.getGender());
         dto.setHireDate(employee.getHireDate());
+        dto.setDepartment(employee.getDepartment());
         return dto;
     }
 

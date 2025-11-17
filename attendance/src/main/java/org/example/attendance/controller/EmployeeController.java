@@ -44,7 +44,6 @@ public class EmployeeController {
         List<Employee> employees = employeeService.getEmployeeByStatus(status);
         return ResponseEntity.ok(employees);
     }
-
     @PostMapping
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
         Employee save = employeeService.saveEmployee(employee);
