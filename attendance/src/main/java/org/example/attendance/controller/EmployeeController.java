@@ -1,6 +1,7 @@
 package org.example.attendance.controller;
 
 import org.example.attendance.dto.EmployeeDTO;
+import org.example.attendance.dto.EmployeeProfileDTO;
 import org.example.attendance.entity.Employee;
 import org.example.attendance.mapper.EmployeeMapper;
 import org.example.attendance.service.EmployeeService;
