@@ -19,8 +19,8 @@ public class CheckinController {
     @PostMapping("/check-in/{employeeId}")
     public ResponseEntity<?> checkIn(@PathVariable Long employeeId,
                                      HttpServletRequest request,
-                                     @RequestParam(defaultValue = "QR_IP") String method) {
-        String ip = Optional.ofNullable(request.getHeader("X-Forwarded-For"))
+                                     @RequestParam(defaultValue = "Click_IP") String method) { //POST /check-in/5?method=click_IP
+        String ip = Optional.ofNullable(request.getHeader("X-Forwarded-For")) // get ip real
                 .orElse(request.getRemoteAddr());
         Attendance result = checkinService.checkIn(employeeId, ip, method);
         return ResponseEntity.ok(result);
