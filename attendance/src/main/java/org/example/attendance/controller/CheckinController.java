@@ -20,7 +20,7 @@ public class CheckinController {
     public ResponseEntity<?> checkIn(@PathVariable Long employeeId,
                                      HttpServletRequest request,
                                      @RequestParam(defaultValue = "Click_IP") String method) { //POST /check-in/5?method=click_IP
-        String ip = Optional.ofNullable(request.getHeader("X-Forwarded-For")) // get ip real
+        String ip = Optional.ofNullable(request.getHeader("X-Forwarded-For")) // get ip real //Nginx lấy IP từ TCP connection (không fake được)//User → Nginx (thêm IP thật) → Backend (check IP)
                 .orElse(request.getRemoteAddr());
         Attendance result = checkinService.checkIn(employeeId, ip, method);
         return ResponseEntity.ok(result);

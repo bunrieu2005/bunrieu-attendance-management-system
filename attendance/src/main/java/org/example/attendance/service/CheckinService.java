@@ -48,6 +48,7 @@ public class CheckinService {
     }
     public Attendance checkOut(Long empId) {
         Attendance a = attendanceRepo
+
                 .findTopByEmployeeIdAndCheckOutAtIsNullOrderByCheckInAtDesc(empId)
                 .orElseThrow(() -> new IllegalStateException("no active check-in record,400 bad rq"));
         a.setCheckOutAt(LocalDateTime.now());
