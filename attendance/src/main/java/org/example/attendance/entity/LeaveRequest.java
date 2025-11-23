@@ -20,9 +20,9 @@ public class LeaveRequest {
     private LocalDate endDate;
     @Column(name = "reason", length = 255)
     private String reason;
-    @Enumerated(EnumType.STRING)
+    //@Enumerated(EnumType.STRING)
     private String type;         //get only data this enum
-    @Enumerated(EnumType.STRING)
+   // @Enumerated(EnumType.STRING)
     private String status;
     @ManyToOne
     @JsonIgnore
