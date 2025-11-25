@@ -29,6 +29,8 @@ public class Employee {
     private String role;
     @Column(name="status")
     private String status;
+    @Column (name="image")
+    private String image;
     // N employee-1department
     @ManyToOne
     @JoinColumn(name = "department_id",referencedColumnName = "" +

@@ -20,4 +20,11 @@ public interface AttendanceRepo extends JpaRepository<Attendance,Long> {
     @Query("SELECT COUNT(a) FROM Attendance a WHERE a.workDate = :date AND a.checkOutAt IS NULL")
     long countByWorkDateAndCheckOutAtIsNull(@Param("date") LocalDate date);
     List<Attendance> findByWorkDateAndCheckOutAtIsNull(LocalDate workDate);
+    List<Attendance> findByEmployeeIdOrderByWorkDateDesc(Long employeeId);// Lấy attendance theo employee ID và khoảng thời gian
+    List<Attendance> findByEmployeeIdAndWorkDateBetweenOrderByWorkDateDesc(
+            Long employeeId,
+            LocalDate startDate,
+            LocalDate endDate
+    );
+
 }

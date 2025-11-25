@@ -50,7 +50,9 @@ public class DashboardController {
                     map.put("employeeName", att.getEmployee().getName());
                     map.put("departmentName", att.getEmployee().getDepartment() != null
                             ? att.getEmployee().getDepartment().getName() : "N/A");
+                    map.put("image", att.getEmployee().getImage());
                     map.put("checkInTime", att.getCheckInAt());
+
                     return map;
                 })
                 .collect(Collectors.toList()); // gom map tra json
@@ -73,6 +75,7 @@ public class DashboardController {
                     map.put("employeeName", emp.getName());
                     map.put("departmentName", emp.getDepartment() != null
                             ? emp.getDepartment().getName() : "N/A");
+                    map.put("image", emp.getImage());
                     map.put("reason", "Don Xin Nghi");
                     return map;
                 })

@@ -16,5 +16,6 @@ public class EmployeeDTO {
         private String gender;
         private LocalDate hireDate;
         private Department department;
+        private String image;
 }
 
