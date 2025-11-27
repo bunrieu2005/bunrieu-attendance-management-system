@@ -3,19 +3,32 @@ package org.example.attendance.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.attendance.entity.Department;
 
 import java.time.LocalDate;
+
 @Data @NoArgsConstructor @AllArgsConstructor
 public class EmployeeDTO {
+
+    private Long id;
+    private String name;
+    private String email;
+    private String password;
+    private LocalDate dob;
+    private String gender;
+    private String role;
+    private String status;
+    private LocalDate hireDate;
+    private String image;
+    private Long departmentId;
+    private String departmentName;
+    private DepartmentInfo department;
+
+    @Data @NoArgsConstructor @AllArgsConstructor
+    public static class DepartmentInfo {
         private Long id;
         private String name;
-        private LocalDate dob;
-        private String email;
-        private String role;
-        private String gender;
-        private LocalDate hireDate;
-        private Department department;
-        private String image;
-}
+        private String description;
+    }
 
+
+}

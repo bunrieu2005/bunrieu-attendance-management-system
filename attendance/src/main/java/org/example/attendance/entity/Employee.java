@@ -32,7 +32,7 @@ public class Employee {
     @Column (name="image")
     private String image;
     // N employee-1department
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id",referencedColumnName = "" +
             "id")
     private Department department;
