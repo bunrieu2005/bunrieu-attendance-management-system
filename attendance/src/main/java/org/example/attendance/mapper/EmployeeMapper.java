@@ -32,18 +32,14 @@ public class EmployeeMapper {
 
             dto.setDepartment(deptInfo);
         }
-
         return dto;
     }
-
     public static List<EmployeeDTO> toDTOList(List<Employee> employees) {
         return employees.stream()
                 .map(EmployeeMapper::toDTO)
                 .collect(Collectors.toList());
     }
-
     public static Employee toEntity(EmployeeDTO dto) {
-
         if (dto == null) {
             return null;
         }

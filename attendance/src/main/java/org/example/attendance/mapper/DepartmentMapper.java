@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 public class DepartmentMapper {
     public static DepartmentDTO toDTO(Department department) {
         DepartmentDTO dto = new DepartmentDTO();
+        dto.setId(String.valueOf(department.getId()));
         dto.setName(department.getName());
         dto.setDescription(department.getDescription());
         return dto;

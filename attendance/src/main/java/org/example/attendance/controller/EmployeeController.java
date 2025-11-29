@@ -62,11 +62,6 @@ public class EmployeeController {
         List<EmployeeDTO> dtos = EmployeeMapper.toDTOList(list);
         return ResponseEntity.ok(dtos);
     }
-
-    // ═══════════════════════════════════════════════════════
-    // CREATE - SỬA LẠI ĐỂ XỬ LÝ DEPARTMENT NULL
-    // ═══════════════════════════════════════════════════════
-
     @PostMapping
     public ResponseEntity<?> addEmployee(@RequestBody EmployeeDTO dto) {
         try {
@@ -115,17 +110,26 @@ public class EmployeeController {
                 Department department = departmentRepo.findById(dto.getDepartmentId())
                         .orElseThrow(() -> new RuntimeException("Department not found"));
                 existing.setDepartment(department);
+                System.out.println("Department set: " + department.getName());
+            } else {
+                System.out.println("Department giữ nguyên: " +
+                        (existing.getDepartment() != null ? existing.getDepartment().getName() : "null"));
             }
+
             if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
                 existing.setPassword(passwordEncoder.encode(dto.getPassword()));
             }
 
             Employee updated = employeeService.saveEmployee(existing);
+
+            System.out.println("Saved! Department: " +
+                    (updated.getDepartment() != null ? updated.getDepartment().getName() : "null"));
+
             Employee reloaded = employeeService.getEmployeeById(updated.getId())
                     .orElse(updated);
-            System.out.println("Reloaded department: " +
-                    (reloaded.getDepartment() != null ? reloaded.getDepartment().getName() : "null"));
+
             EmployeeDTO responseDto = EmployeeMapper.toDTO(reloaded);
+            System.out.println("Response DTO departmentId: " + responseDto.getDepartmentId());
 
             return ResponseEntity.ok(responseDto);
 
