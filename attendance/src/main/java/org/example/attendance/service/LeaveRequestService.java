@@ -22,10 +22,10 @@ public class LeaveRequestService
         return  leaveRequestRepo.findById(id);
     }
     public List<LeaveRequest> getLeaveRequestByEmployeeId(long employeeId){
-                return leaveRequestRepo.findByEmployeeId(employeeId);
+                return leaveRequestRepo.findByEmployee_Id(employeeId);
     }
     public List<LeaveRequest> getByStatus(String status){
-        return leaveRequestRepo.getLeaveRequestByStatus(status);
+        return leaveRequestRepo.findByStatus(status);
     }
     public LeaveRequest saveLeaveRequest(LeaveRequest leaveRequest){
         return leaveRequestRepo.save(leaveRequest);
