@@ -102,7 +102,7 @@ public class AttendanceController {
     public ResponseEntity<EmployeeAttendanceDTO> getSingleEmployeeAttendanceByRange(
             @PathVariable Long employeeId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {   
         EmployeeAttendanceDTO dto = reportService.getEmployeeAttendance(
                 employeeId, startDate, endDate);
         return ResponseEntity.ok(dto);

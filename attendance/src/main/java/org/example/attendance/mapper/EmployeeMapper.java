@@ -1,6 +1,7 @@
 package org.example.attendance.mapper;
 
 import org.example.attendance.dto.EmployeeDTO;
+import org.example.attendance.dto.EmployeeDetailDTO;
 import org.example.attendance.entity.Employee;
 
 import java.util.List;
@@ -38,6 +39,29 @@ public class EmployeeMapper {
         return employees.stream()
                 .map(EmployeeMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+    public static EmployeeDetailDTO toDetailDTO(Employee employee) {
+        if (employee == null) return null;
+        EmployeeDetailDTO dto = new EmployeeDetailDTO();
+        dto.setId(employee.getId());
+        dto.setName(employee.getName());
+        dto.setEmail(employee.getEmail());
+        dto.setDob(employee.getDob());
+        dto.setGender(employee.getGender());
+        dto.setRole(employee.getRole());
+        dto.setStatus(employee.getStatus());
+        dto.setHireDate(employee.getHireDate());
+        dto.setImage(employee.getImage());
+
+        if (employee.getDepartment() != null) {
+            EmployeeDetailDTO.DepartmentInfo dept = new EmployeeDetailDTO.DepartmentInfo(
+                    employee.getDepartment().getId(),
+                    employee.getDepartment().getName(),
+                    employee.getDepartment().getDescription()
+            );
+            dto.setDepartment(dept);
+        }
+        return dto;
     }
     public static Employee toEntity(EmployeeDTO dto) {
         if (dto == null) {

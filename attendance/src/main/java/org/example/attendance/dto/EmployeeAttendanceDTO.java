@@ -9,4 +9,9 @@ public class EmployeeAttendanceDTO {
     private String employeeName;
     private String departmentName;
     private List<AttendanceRecordDTO> records;
+
+    // Tổng hợp cho báo cáo
+    private Integer totalMinutes; // tổng phút làm việc trong khoảng
+    private Double totalHours;    // quy đổi giờ = totalMinutes / 60.0
+    private Integer lateDays;     // số ngày đi trễ trong khoảng
 }

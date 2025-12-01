@@ -10,6 +10,7 @@ import org.example.attendance.repository.EmployeeRepo;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,12 +41,17 @@ public class AttendanceReportService {
                 .map(this::toRecordDTO)
                 .collect(Collectors.toList());
 
+        Aggregates aggregates = computeAggregates(attendances);
+
         return EmployeeAttendanceDTO.builder()
                 .employeeId(employee.getId())
                 .employeeName(employee.getName())
                 .departmentName(employee.getDepartment() != null ?
                         employee.getDepartment().getName() : "N/A")
                 .records(records)
+                .totalMinutes(aggregates.totalMinutes)
+                .totalHours(aggregates.totalMinutes / 60.0)
+                .lateDays(aggregates.lateDays)
                 .build();
     }
     public Map<Long, EmployeeAttendanceDTO> getMultipleEmployeesAttendance(
@@ -64,12 +70,17 @@ public class AttendanceReportService {
                         .map(this::toRecordDTO)
                         .collect(Collectors.toList());
 
+                Aggregates aggregates = computeAggregates(attendances);
+
                 EmployeeAttendanceDTO dto = EmployeeAttendanceDTO.builder()
                         .employeeId(employee.getId())
                         .employeeName(employee.getName())
                         .departmentName(employee.getDepartment() != null ?
                                 employee.getDepartment().getName() : "N/A")
                         .records(records)
+                        .totalMinutes(aggregates.totalMinutes)
+                        .totalHours(aggregates.totalMinutes / 60.0)
+                        .lateDays(aggregates.lateDays)
                         .build();
 
                 result.put(employeeId, dto);
@@ -107,4 +118,31 @@ public class AttendanceReportService {
                 .checkOut(attendance.getCheckOutAt())
                 .build();
     }
+
+    private Aggregates computeAggregates(List<Attendance> attendances) {
+        int totalMinutes = 0;
+        int lateDays = 0;
+        for (Attendance a : attendances) {
+            if (a.getLateFlag() > 0) {
+                lateDays += 1;
+            }
+
+            Integer recMinutes = a.getTotalMinutes();
+            if (recMinutes == null) {
+                if (a.getCheckInAt() != null && a.getCheckOutAt() != null &&
+                        a.getCheckOutAt().isAfter(a.getCheckInAt())) {
+                    long mins = Duration.between(a.getCheckInAt(), a.getCheckOutAt()).toMinutes();
+                    if (mins > 0 && mins < Integer.MAX_VALUE) {
+                        recMinutes = (int) mins;
+                    }
+                }
+            }
+            if (recMinutes != null && recMinutes > 0) {
+                totalMinutes += recMinutes;
+            }
+        }
+        return new Aggregates(totalMinutes, lateDays);
+    }
+
+    private record Aggregates(int totalMinutes, int lateDays) {}
 }

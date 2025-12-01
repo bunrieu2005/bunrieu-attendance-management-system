@@ -1,6 +1,7 @@
 package org.example.attendance.controller;
 
 import org.example.attendance.dto.EmployeeDTO;
+import org.example.attendance.dto.EmployeeDetailDTO;
 import org.example.attendance.entity.Department;
 import org.example.attendance.entity.Employee;
 import org.example.attendance.mapper.EmployeeMapper;
@@ -54,6 +55,20 @@ public class EmployeeController {
         List<Employee> employees = employeeService.getEmployeeByStatus(status);
         List<EmployeeDTO> dtos = EmployeeMapper.toDTOList(employees);
         return ResponseEntity.ok(dtos);
+    }
+    @GetMapping("/{id}/profile")
+    public ResponseEntity<?> getEmployeeProfile(@PathVariable Long id) {
+        Optional<Employee> employee = employeeService.getEmployeeById(id);
+        return employee
+                .map(emp -> ResponseEntity.ok(EmployeeMapper.toDetailDTO(emp)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+    @GetMapping("/email/{email}/profile")
+    public ResponseEntity<?> getEmployeeProfileByEmail(@PathVariable String email) {
+        Optional<Employee> employee = employeeService.getEmployeeByEmail(email);
+        return employee
+                .map(emp -> ResponseEntity.ok(EmployeeMapper.toDetailDTO(emp)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/department/{departmentId}")
