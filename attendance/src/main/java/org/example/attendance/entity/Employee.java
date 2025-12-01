@@ -48,4 +48,7 @@ public class Employee {
     //1 employee - N loginHistory
     @OneToMany(mappedBy ="employee",cascade = CascadeType.ALL,fetch = FetchType.LAZY )
     private List<LoginHistory>  loginHistories;
+    @Column(columnDefinition = "TEXT")
+    private String faceEmbedding;
+
 }
