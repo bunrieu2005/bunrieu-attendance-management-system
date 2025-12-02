@@ -14,24 +14,21 @@ import java.time.LocalDate;
 @CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 public class ReportController {
-
     private final AttendanceReportService reportService;
-
     @GetMapping("/attendance/{employeeId}")
     public ResponseEntity<EmployeeAttendanceDTO> getAttendance(
             @PathVariable Long employeeId) {
         EmployeeAttendanceDTO ReportDTO = reportService.getEmployeeAttendance(employeeId);
         return ResponseEntity.ok(ReportDTO);
     }
-    @GetMapping("/attendance/{employeeId}/range")
-    public ResponseEntity<EmployeeAttendanceDTO> getAttendanceByRange(
-            @PathVariable Long employeeId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-
-        EmployeeAttendanceDTO ReportDTO = reportService.getEmployeeAttendance(
-                employeeId, startDate, endDate
-        );
-        return ResponseEntity.ok(ReportDTO);
-    }
+        @GetMapping("/attendance/{employeeId}/range")
+        public ResponseEntity<EmployeeAttendanceDTO> getAttendanceByRange(
+                @PathVariable Long employeeId,
+                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            EmployeeAttendanceDTO ReportDTO = reportService.getEmployeeAttendance(
+                    employeeId, startDate, endDate
+            );
+            return ResponseEntity.ok(ReportDTO);
+        }
 }

@@ -6,6 +6,7 @@ import org.example.attendance.repository.AttendanceRepo;
 import org.example.attendance.repository.EmployeeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
 import java.util.Arrays;
@@ -22,6 +23,7 @@ public class CheckinService {
             "192.168.1.100",
             "0:0:0:0:0:0:0:1"
     );
+    @Transactional// delete complete->create
         public Attendance checkIn(Long empId, String ip, String method) {
             if (!ALLOWED_IPS.contains(ip)) {
                 throw new SecurityException("no accept  check in at ip : " + ip);
@@ -29,6 +31,20 @@ public class CheckinService {
 Employee emp = employeeRepo.findById(empId) //select * from employees where id =5
         .orElseThrow(() -> new IllegalArgumentException("employee not found :{400 bad request}"));
 LocalDate today = LocalDate.now();
+
+
+//cách 3 :// --- ĐOẠN MỚI THÊM: DỌN DẸP RIÊNG CHO NV NÀY TRƯỚC KHI CHECKIN ---
+//        // Tìm xem ông này có bản ghi nào chưa checkout mà KHÔNG PHẢI HÔM NAY không?
+//        List<Attendance> oldRecords = attendanceRepo.findByEmployeeIdAndCheckOutAtIsNull(empId);
+//
+//        for (Attendance old : oldRecords) {
+//            if (!old.getWorkDate().isEqual(today)) {
+//                attendanceRepo.delete(old);
+//                System.out.println("delete complete check-in ole employees: " + empId);
+//            }
+//        }
+
+
         if (attendanceRepo.findByEmployeeIdAndWorkDate(empId, today).isPresent()) { //select * from attendanc WHERE employeeid = 5 AND workdate = '2025-11-19'
         throw new IllegalStateException("already checked in today ,409 conflict");
         }

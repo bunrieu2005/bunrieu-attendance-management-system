@@ -32,5 +32,6 @@ public interface AttendanceRepo extends JpaRepository<Attendance,Long> {
             LocalDate startDate,
             LocalDate endDate
     );
-
+    // new funtion: all record checkout = null < today -> delete checkin
+    List<Attendance> findAllByCheckOutAtIsNullAndWorkDateBefore(LocalDate date);
 }
