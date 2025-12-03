@@ -4,6 +4,7 @@ import org.example.attendance.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,4 +13,11 @@ public interface EmployeeRepo extends JpaRepository<Employee,Long> {
     Optional<Employee> findByEmail(String email);
     List<Employee> findByDepartment_Id(long departmentId);
     List<Employee> findByStatus(String status);
+
+    long countByRole(String role);
+
+
+    long countByGender(String gender);
+
+    long countByHireDateBetween(LocalDate startDate, LocalDate endDate);
 }

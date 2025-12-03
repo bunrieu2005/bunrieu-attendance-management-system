@@ -43,8 +43,6 @@ LocalDate today = LocalDate.now();
 //                System.out.println("delete complete check-in ole employees: " + empId);
 //            }
 //        }
-
-
         if (attendanceRepo.findByEmployeeIdAndWorkDate(empId, today).isPresent()) { //select * from attendanc WHERE employeeid = 5 AND workdate = '2025-11-19'
         throw new IllegalStateException("already checked in today ,409 conflict");
         }
@@ -64,7 +62,6 @@ Attendance a = new Attendance();
     }
 public Attendance checkOut(Long empId) {
     Attendance a = attendanceRepo
-
             .findTopByEmployeeIdAndCheckOutAtIsNullOrderByCheckInAtDesc(empId)
             .orElseThrow(() -> new IllegalStateException("no active check-in record,400 bad rq"));
     a.setCheckOutAt(LocalDateTime.now());
