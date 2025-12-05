@@ -3,6 +3,8 @@ package org.example.attendance.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.example.attendance.enums.LeaveStatus;
+import org.example.attendance.enums.LeaveType;
 
 import java.time.LocalDate;
 
@@ -20,11 +22,13 @@ public class LeaveRequest {
     private LocalDate endDate;
     @Column(name = "reason", length = 255)
     private String reason;
-    //@Enumerated(EnumType.STRING)
-    private String type;         //get only data this enum
-   // @Enumerated(EnumType.STRING)
-    private String status;
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LeaveType type;        //get only data this enum
+   @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LeaveStatus status;
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     @JoinColumn(name="employee_id",referencedColumnName = "id")
     private Employee employee;

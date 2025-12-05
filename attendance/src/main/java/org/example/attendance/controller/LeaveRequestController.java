@@ -1,49 +1,80 @@
 package org.example.attendance.controller;
 
-import org.example.attendance.entity.LeaveRequest;
+import lombok.RequiredArgsConstructor;
+import org.example.attendance.dto.LeaveRequestDTO;
+import org.example.attendance.enums.LeaveStatus;
+import org.example.attendance.mapper.LeaveRequestMapper;
 import org.example.attendance.service.LeaveRequestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/leaverequests")
+@RequestMapping("/api/leave-requests")
+@CrossOrigin(origins = "http://localhost:4200")
+@RequiredArgsConstructor
 public class LeaveRequestController {
-    @Autowired
-    private LeaveRequestService leaveRequestService;
-    @GetMapping
-    public ResponseEntity<List<LeaveRequest>> getAllLeaveRequests() {
-        List<LeaveRequest> leaveRequests = leaveRequestService.getAllLeaveRequest();
-        return ResponseEntity.ok().body(leaveRequests);
-    }
-    @GetMapping("/id/{id}")
-    public ResponseEntity<LeaveRequest> getLeaveRequestById(@PathVariable Long id) {
-        Optional<LeaveRequest> leaveRequest = leaveRequestService.getLeaveRequestById(id);
-        return leaveRequest.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-    @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<?> getAttendanceByEmployeeId(@PathVariable Long employeeId) {
-        List<LeaveRequest> leaveRequests = leaveRequestService.getLeaveRequestByEmployeeId(employeeId);
-                return  ResponseEntity.ok().body(leaveRequests);
-    }
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<LeaveRequest>> getAllLeaveRequestsByStatus(@PathVariable String status){
-        List<LeaveRequest> list = leaveRequestService.getByStatus(status);
-        return ResponseEntity.ok(list);
-    }
+
+    private final LeaveRequestService leaveRequestService;
+    private final LeaveRequestMapper leaveRequestMapper;
+    // user create leave request:
+    // POST: http://localhost:8080/api/leave-requests
     @PostMapping
-    public ResponseEntity<?> addLeaveRequest(@RequestBody LeaveRequest leaveRequest){
-        LeaveRequest save =leaveRequestService.saveLeaveRequest(leaveRequest);
-        return ResponseEntity.ok().body(save);
+    public ResponseEntity<?> createRequest(@RequestBody LeaveRequestDTO dto) {
+        try {
+            LeaveRequestDTO created = leaveRequestService.createLeaveRequest(dto);
+            return ResponseEntity.ok(created);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("erro srve: " + e.getMessage());
+        }
+    }
+    // list:amin
+    // GET: http://localhost:8080/api/leave-requests
+    @GetMapping
+    public ResponseEntity<List<LeaveRequestDTO>> getAllRequests() {
+        return ResponseEntity.ok(leaveRequestService.getAllRequests());
+    }
+    // update status: admin
+    // URL: PUT /api/leave-requests/{id}/status?status=APPROVED
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateStatus(
+            @PathVariable Long id,
+            @RequestParam LeaveStatus status) {
+        try {
+            LeaveRequestDTO updated = leaveRequestMapper.toDTO(
+                    leaveRequestService.updateStatus(id, status)
+            );
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Lỗi: " + e.getMessage());
+        }
+    }
+    // edit api
+    // PUT: http://localhost:8080/api/leave-requests/{id}
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateRequest(@PathVariable Long id, @RequestBody LeaveRequestDTO dto) {
+        try {
+            LeaveRequestDTO updated = leaveRequestMapper.toDTO(
+                    leaveRequestService.updateRequest(id, dto)
+            );
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Lỗi: " + e.getMessage());
+        }
     }
 
+    // delete api
+    // DELETE: http://localhost:8080/api/leave-requests/{id}
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteLeaveRequest(@PathVariable Long id){
-        leaveRequestService.deleteLeaveRequestById(id);
-        return ResponseEntity.ok("Deleted leave request id = " + id);
-    }
-
+    public ResponseEntity<?> deleteRequest(@PathVariable Long id) {
+        try {
+            leaveRequestService.deleteRequest(id);
+            return ResponseEntity.ok("delete sucssece");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("erro: " + e.getMessage());
+        }
+}
 }
