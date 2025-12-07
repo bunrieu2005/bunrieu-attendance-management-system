@@ -37,12 +37,14 @@ public class AuthService {
     }
     public LoginResponse login(LoginRequest request) {
         Employee e = employeeRepo.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("email not found!"));
+                .orElseThrow(() -> new RuntimeException("Email not found!"));
+
         if (!passwordEncoder.matches(request.getPassword(), e.getPassword())) {
-            throw new RuntimeException("invalid password!");
+            throw new RuntimeException("Invalid password!");
         }
-        //create loginresponse
-        String token = jwtUtils.generateToken(e.getEmail(), e.getRole()); //create  jwt token
-        return new LoginResponse(e.getEmail(), e.getRole(), token);
-    }   
+
+        String token = jwtUtils.generateToken(e.getEmail(), e.getRole());
+
+        return new LoginResponse(e.getId(), e.getName(), e.getEmail(), e.getRole(), token);
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 //POST api/auth/login: {username(tan) + password(123456)
 // get request ,  call Authservice
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

@@ -6,41 +6,50 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority; // <--- Import mới
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import java.io.IOException;
-import java.util.Collections;
-@Component
-//login susceess-> frontend save token ->use view doashboad -> anguler call api ->authorization:bear->jwtfilter
 
+import java.io.IOException;
+import java.util.List; // <--- Import mới
+
+@Component
 public class JwtFilter extends OncePerRequestFilter {
+
     @Autowired
     private JwtUtils jwtUtils;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-        //get token for header
+
+        // 1. Lấy token
         String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer")) {
+        if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = header.substring(7);
-//verify token
+
+        // 2. Validate token
         if (jwtUtils.validateToken(token)) {
             String email = jwtUtils.extractEmail(token);
-           // SET AUTHENTICATION
+
+
+            List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+
             UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
+                    new UsernamePasswordAuthenticationToken(email, null, authorities); // <--- Truyền quyền vào
+
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }
-        //request continue
+
         filterChain.doFilter(request, response);
     }
 }

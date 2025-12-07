@@ -77,28 +77,32 @@ public class EmployeeController {
         List<EmployeeDTO> dtos = EmployeeMapper.toDTOList(list);
         return ResponseEntity.ok(dtos);
     }
+  // add employee for bcyrps
     @PostMapping
     public ResponseEntity<?> addEmployee(@RequestBody EmployeeDTO dto) {
         try {
+
             Employee employee = EmployeeMapper.toEntity(dto);
+
             if (dto.getDepartmentId() != null) {
                 Department department = departmentRepo.findById(dto.getDepartmentId())
-                        .orElseThrow(() -> new RuntimeException("Department not found: " + dto.getDepartmentId()));
+                        .orElseThrow(() -> new RuntimeException("Department not found"));
                 employee.setDepartment(department);
             } else {
                 employee.setDepartment(null);
             }
-            if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-                employee.setPassword(passwordEncoder.encode(dto.getPassword()));
-            }
+
+            String rawPassword = (dto.getPassword() != null && !dto.getPassword().isEmpty())
+                    ? dto.getPassword()
+                    : "123";
+            employee.setPassword(passwordEncoder.encode(rawPassword));
             Employee saved = employeeService.saveEmployee(employee);
             EmployeeDTO responseDto = EmployeeMapper.toDTO(saved);
             return ResponseEntity.ok(responseDto);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
     @PutMapping("/{id}")
