@@ -179,20 +179,32 @@ public class EmployeeController {
         return ResponseEntity.ok(Map.of("message", "Deleted successfully"));
     }
 
+    // API Đăng ký khuôn mặt: POST /api/employees/{id}/face
     @PostMapping("/{id}/face")
     public ResponseEntity<?> registerFace(@PathVariable Long id, @RequestParam("image") MultipartFile image) {
         try {
+            // 1. Tìm nhân viên trong DB
             Employee employee = employeeRepo.findById(id)
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên ID: " + id));
+
+            // 2. Gọi Python để lấy vector (Embedding)
             FaceEmbeddingResponse response = faceService.extractEmbedding(image);
+
             if (response == null || !response.isSuccess()) {
                 return ResponseEntity.badRequest().body("Lỗi: Không tìm thấy khuôn mặt trong ảnh!");
             }
+
+            // 3. Chuyển List<Double> thành chuỗi JSON string để lưu vào SQL Server
+            // Ví dụ: "[0.12312, -0.55512, ...]"
             ObjectMapper mapper = new ObjectMapper();
             String embeddingJson = mapper.writeValueAsString(response.getEmbedding());
+
+            // 4. Lưu vào cột faceEmbedding
             employee.setFaceEmbedding(embeddingJson);
             employeeRepo.save(employee);
+
             return ResponseEntity.ok("Đã cập nhật khuôn mặt cho nhân viên: " + employee.getName());
+
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Lỗi server: " + e.getMessage());
         }
