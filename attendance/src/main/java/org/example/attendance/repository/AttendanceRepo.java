@@ -67,10 +67,10 @@ public interface AttendanceRepo extends JpaRepository<Attendance,Long> {
             "   e.id, " +
             "   e.name, " +
             "   d.name, " +
-            // Ép kiểu tổng phút sang double trước khi chia
+
             "   CAST(COALESCE(SUM(a.totalMinutes), 0) AS double) / 60.0, " +
             "   COUNT(a.id), " +
-            // Ép kiểu tổng trễ sang long
+
             "   CAST(COALESCE(SUM(a.lateFlag), 0) AS long) " +
             ") " +
             "FROM Attendance a " +
@@ -83,11 +83,11 @@ public interface AttendanceRepo extends JpaRepository<Attendance,Long> {
                                                    @Param("endDate") LocalDate endDate);
 
 
-    // Đếm tổng số lượt đi muộn trong khoảng thời gian (lateFlag > 0)
+
     @Query("SELECT COUNT(a) FROM Attendance a WHERE a.lateFlag > 0 AND a.workDate BETWEEN :startDate AND :endDate")
     long countTotalLate(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
-    // Đếm số lượng nhân viên ĐI MUỘN (Distinct)
+
     @Query("SELECT COUNT(DISTINCT a.employee.id) FROM Attendance a WHERE a.lateFlag > 0 AND a.workDate BETWEEN :startDate AND :endDate")
     long countLateEmployees(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }

@@ -1,16 +1,21 @@
 package org.example.attendance.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.attendance.dto.EmployeeDTO;
 import org.example.attendance.dto.EmployeeDetailDTO;
+import org.example.attendance.dto.FaceEmbeddingResponse;
 import org.example.attendance.entity.Department;
 import org.example.attendance.entity.Employee;
 import org.example.attendance.mapper.EmployeeMapper;
 import org.example.attendance.repository.DepartmentRepo;
+import org.example.attendance.repository.EmployeeRepo;
 import org.example.attendance.service.EmployeeService;
+import org.example.attendance.service.FaceRecognitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -29,6 +34,12 @@ public class EmployeeController {
 
     @Autowired
     private DepartmentRepo departmentRepo;
+
+    @Autowired
+    private EmployeeRepo employeeRepo; // Repository quản lý nhân viên
+
+    @Autowired
+    private FaceRecognitionService faceService; //
     @GetMapping
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
         List<Employee> employees = employeeService.getAllEmployees();
@@ -166,5 +177,24 @@ public class EmployeeController {
         }
         employeeService.deleteEmployee(id);
         return ResponseEntity.ok(Map.of("message", "Deleted successfully"));
+    }
+
+    @PostMapping("/{id}/face")
+    public ResponseEntity<?> registerFace(@PathVariable Long id, @RequestParam("image") MultipartFile image) {
+        try {
+            Employee employee = employeeRepo.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên ID: " + id));
+            FaceEmbeddingResponse response = faceService.extractEmbedding(image);
+            if (response == null || !response.isSuccess()) {
+                return ResponseEntity.badRequest().body("Lỗi: Không tìm thấy khuôn mặt trong ảnh!");
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            String embeddingJson = mapper.writeValueAsString(response.getEmbedding());
+            employee.setFaceEmbedding(embeddingJson);
+            employeeRepo.save(employee);
+            return ResponseEntity.ok("Đã cập nhật khuôn mặt cho nhân viên: " + employee.getName());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Lỗi server: " + e.getMessage());
+        }
     }
 }

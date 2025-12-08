@@ -58,8 +58,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/departments/**").permitAll()
                         .requestMatchers("/api/leave-requests/**").permitAll()
                         .requestMatchers("/api/stats/**").permitAll()
-
-
+                        .requestMatchers("/api/attendances/**").permitAll()
+                        .requestMatchers("/api/employees/**").permitAll()
+                        .requestMatchers("/api/attendances/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
