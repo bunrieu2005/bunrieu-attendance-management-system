@@ -73,7 +73,7 @@ public class AttendanceController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAttendanceById(@PathVariable Long id) {
         attendanceService.deleteAttendanceById(id);
-        return ResponseEntity.ok(Map.of("message", "Deleted attendance id = " + id));
+        return ResponseEntity.ok(Map.of("message", "deleted attendance id = " + id));
     }
     @PostMapping("/employees")
     public ResponseEntity<Map<Long, EmployeeAttendanceDTO>> getMultipleEmployeesAttendance(
@@ -135,7 +135,8 @@ public class AttendanceController {
             FaceVerifyResponse result = faceService.verifyFace(image);
 
             if (!result.isSuccess()) {
-                return ResponseEntity.status(401).body("Khuôn mặt không hợp lệ!");
+                return ResponseEntity.status(401).body("\n" +
+                        "inappropriate face");
             }
 
             recognizedId = Long.valueOf(result.getEmployeeId());
@@ -150,7 +151,7 @@ public class AttendanceController {
 
             if (recognizedId != null) {
                 Employee emp = employeeRepo.findById(recognizedId).orElse(null);
-                String name = (emp != null) ? emp.getName() : "Nhân viên";
+                String name = (emp != null) ? emp.getName() : "employee";
                 response.put("employeeName", name);
             } else {
                 response.put("employeeName", "Bạn");
@@ -162,7 +163,7 @@ public class AttendanceController {
         } catch (SecurityException e) {
             return ResponseEntity.status(403).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Lỗi: " + e.getMessage());
+            return ResponseEntity.badRequest().body("erro: " + e.getMessage());
         }
     }
 }

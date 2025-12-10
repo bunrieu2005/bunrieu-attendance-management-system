@@ -3,11 +3,12 @@ package org.example.attendance.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod; // <--- Import cái này
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer; // Import cái này
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,31 +38,33 @@ public class SecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(
+                "/images/**",
+                "/css/**",
+                "/js/**",
+                "/webjars/**"
+        );
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers("/api/auth/**").permitAll()
 
+                                .requestMatchers("/api/**").permitAll()
 
-                        .requestMatchers("/api/auth/**").permitAll()
-
-
-                        .requestMatchers("/images/**").permitAll()
-                        .requestMatchers("/css/**", "/js/**").permitAll() // Cho phép cả css, js nếu có
-
-                        .requestMatchers("/api/dashboard/**").permitAll()
-                        .requestMatchers("/api/employees/**").permitAll()
-                        .requestMatchers("/api/departments/**").permitAll()
-                        .requestMatchers("/api/leave-requests/**").permitAll()
-                        .requestMatchers("/api/stats/**").permitAll()
-                        .requestMatchers("/api/attendances/**").permitAll()
-                        .requestMatchers("/api/employees/**").permitAll()
-                        .requestMatchers("/api/attendances/**").permitAll()
-                        .anyRequest().authenticated()
+                /* to do : update security
+                 .requestMatchers("/api/employees/**").hasAnyAuthority("ADMIN", "USER")
+                 .requestMatchers("/api/departments/**").authenticated()
+                 .anyRequest().authenticated()
+                */
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -72,12 +75,19 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
+
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
 
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+
 
         configuration.setAllowedHeaders(Arrays.asList("*"));
+
+
         configuration.setAllowCredentials(true);
+
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

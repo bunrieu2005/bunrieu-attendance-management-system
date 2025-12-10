@@ -50,6 +50,6 @@ public class DepartmentController {
             return ResponseEntity.notFound().build();
         }
         departmentService.deleteDepartmentById(id);
-        return ResponseEntity.ok("Đã xóa phòng ban có ID = " + id);
+        return ResponseEntity.ok("complete delete id = " + id);
     }
 }

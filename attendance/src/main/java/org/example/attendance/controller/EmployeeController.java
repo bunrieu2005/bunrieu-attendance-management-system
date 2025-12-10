@@ -14,13 +14,18 @@ import org.example.attendance.service.FaceRecognitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/employees")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -36,10 +41,10 @@ public class EmployeeController {
     private DepartmentRepo departmentRepo;
 
     @Autowired
-    private EmployeeRepo employeeRepo; // Repository quản lý nhân viên
+    private EmployeeRepo employeeRepo;
 
     @Autowired
-    private FaceRecognitionService faceService; //
+    private FaceRecognitionService faceService;
     @GetMapping
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
         List<Employee> employees = employeeService.getAllEmployees();
@@ -88,43 +93,62 @@ public class EmployeeController {
         List<EmployeeDTO> dtos = EmployeeMapper.toDTOList(list);
         return ResponseEntity.ok(dtos);
     }
-  // add employee for bcyrps
-    @PostMapping
-    public ResponseEntity<?> addEmployee(@RequestBody EmployeeDTO dto) {
-        try {
-
-            Employee employee = EmployeeMapper.toEntity(dto);
-
-            if (dto.getDepartmentId() != null) {
-                Department department = departmentRepo.findById(dto.getDepartmentId())
-                        .orElseThrow(() -> new RuntimeException("Department not found"));
-                employee.setDepartment(department);
-            } else {
-                employee.setDepartment(null);
-            }
-
-            String rawPassword = (dto.getPassword() != null && !dto.getPassword().isEmpty())
-                    ? dto.getPassword()
-                    : "123";
-            employee.setPassword(passwordEncoder.encode(rawPassword));
-            Employee saved = employeeService.saveEmployee(employee);
-            EmployeeDTO responseDto = EmployeeMapper.toDTO(saved);
-            return ResponseEntity.ok(responseDto);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+    private String saveImage(MultipartFile file, Long empId) throws Exception {
+        String uploadDir = "src/main/resources/static/images/avatars/";
+        String fileName = empId + "_" + StringUtils.cleanPath(file.getOriginalFilename());
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
         }
+
+        try (InputStream inputStream = file.getInputStream()) {
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        }
+        return "/images/avatars/" + fileName;
     }
-    @PutMapping("/{id}")
+  // add employee for bcyrps
+  @PostMapping(consumes = { "multipart/form-data" })
+  public ResponseEntity<?> addEmployee(
+          @ModelAttribute EmployeeDTO dto,
+          @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+      try {
+          Employee employee = EmployeeMapper.toEntity(dto);
+          if (dto.getDepartmentId() != null) {
+              Department department = departmentRepo.findById(dto.getDepartmentId())
+                      .orElseThrow(() -> new RuntimeException("Department not found"));
+              employee.setDepartment(department);
+          } else {
+              employee.setDepartment(null);
+          }
+
+          String rawPassword = (dto.getPassword() != null && !dto.getPassword().isEmpty()) ? dto.getPassword() : "123";
+          employee.setPassword(passwordEncoder.encode(rawPassword));
+
+          Employee saved = employeeService.saveEmployee(employee);
+
+
+          if (imageFile != null && !imageFile.isEmpty()) {
+              String imageUrl = saveImage(imageFile, saved.getId());
+              saved.setImage(imageUrl);
+              employeeService.saveEmployee(saved);
+          }
+
+          return ResponseEntity.ok(EmployeeMapper.toDTO(saved));
+
+      } catch (Exception e) {
+          e.printStackTrace();
+          return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+      }
+  }
+    @PutMapping(value = "/{id}", consumes = { "multipart/form-data" })
     public ResponseEntity<?> updateEmployee(
             @PathVariable Long id,
-            @RequestBody EmployeeDTO dto) {
+            @ModelAttribute EmployeeDTO dto,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
         try {
             Optional<Employee> existingOpt = employeeService.getEmployeeById(id);
-            if (existingOpt.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
+            if (existingOpt.isEmpty()) return ResponseEntity.notFound().build();
 
             Employee existing = existingOpt.get();
 
@@ -137,36 +161,25 @@ public class EmployeeController {
             existing.setHireDate(dto.getHireDate());
 
             if (dto.getDepartmentId() != null) {
-                Department department = departmentRepo.findById(dto.getDepartmentId())
-                        .orElseThrow(() -> new RuntimeException("Department not found"));
+                Department department = departmentRepo.findById(dto.getDepartmentId()).orElse(null);
                 existing.setDepartment(department);
-                System.out.println("Department set: " + department.getName());
-            } else {
-                System.out.println("Department giữ nguyên: " +
-                        (existing.getDepartment() != null ? existing.getDepartment().getName() : "null"));
             }
 
             if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
                 existing.setPassword(passwordEncoder.encode(dto.getPassword()));
             }
 
+            if (imageFile != null && !imageFile.isEmpty()) {
+                String imageUrl = saveImage(imageFile, existing.getId());
+                existing.setImage(imageUrl);
+            }
+
             Employee updated = employeeService.saveEmployee(existing);
-
-            System.out.println("Saved! Department: " +
-                    (updated.getDepartment() != null ? updated.getDepartment().getName() : "null"));
-
-            Employee reloaded = employeeService.getEmployeeById(updated.getId())
-                    .orElse(updated);
-
-            EmployeeDTO responseDto = EmployeeMapper.toDTO(reloaded);
-            System.out.println("Response DTO departmentId: " + responseDto.getDepartmentId());
-
-            return ResponseEntity.ok(responseDto);
+            return ResponseEntity.ok(EmployeeMapper.toDTO(updated));
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
     @DeleteMapping("/{id}")
@@ -179,34 +192,27 @@ public class EmployeeController {
         return ResponseEntity.ok(Map.of("message", "Deleted successfully"));
     }
 
-    // API Đăng ký khuôn mặt: POST /api/employees/{id}/face
     @PostMapping("/{id}/face")
     public ResponseEntity<?> registerFace(@PathVariable Long id, @RequestParam("image") MultipartFile image) {
         try {
-            // 1. Tìm nhân viên trong DB
             Employee employee = employeeRepo.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên ID: " + id));
+                    .orElseThrow(() -> new RuntimeException("not found employee id: " + id));
 
-            // 2. Gọi Python để lấy vector (Embedding)
             FaceEmbeddingResponse response = faceService.extractEmbedding(image);
 
             if (response == null || !response.isSuccess()) {
-                return ResponseEntity.badRequest().body("Lỗi: Không tìm thấy khuôn mặt trong ảnh!");
+                return ResponseEntity.badRequest().body("erro: not found face in image");
             }
 
-            // 3. Chuyển List<Double> thành chuỗi JSON string để lưu vào SQL Server
-            // Ví dụ: "[0.12312, -0.55512, ...]"
             ObjectMapper mapper = new ObjectMapper();
             String embeddingJson = mapper.writeValueAsString(response.getEmbedding());
-
-            // 4. Lưu vào cột faceEmbedding
             employee.setFaceEmbedding(embeddingJson);
             employeeRepo.save(employee);
 
-            return ResponseEntity.ok("Đã cập nhật khuôn mặt cho nhân viên: " + employee.getName());
+            return ResponseEntity.ok("complete update face for employee: " + employee.getName());
 
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Lỗi server: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(" server erro: " + e.getMessage());
         }
     }
 }

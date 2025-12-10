@@ -20,9 +20,9 @@ public class CheckinService {
     @Autowired
     private EmployeeRepo employeeRepo;
     private static final List<String> ALLOWED_IPS = Arrays.asList(
-            "127.0.0.1",       // <--- Thêm cái này (IPv4 localhost)
-            "0:0:0:0:0:0:0:1", // <--- Thêm cái này (IPv6 localhost)
-            "192.168.1.100"    // IP công ty cũ
+            "127.0.0.1",
+            "0:0:0:0:0:0:0:1",
+            "192.168.1.100"
     );
     @Transactional// delete complete->create
         public Attendance checkIn(Long empId, String ip, String method) {
