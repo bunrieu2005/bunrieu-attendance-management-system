@@ -77,4 +77,9 @@ public class LeaveRequestController {
             return ResponseEntity.badRequest().body("erro: " + e.getMessage());
         }
 }
+    // GET: http://localhost:8080/api/leave-requests/employee/{employeeId}
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<List<LeaveRequestDTO>> getRequestsByEmployee(@PathVariable Long employeeId) {
+        return ResponseEntity.ok(leaveRequestService.getRequestsByEmployeeId(employeeId));
+    }
 }

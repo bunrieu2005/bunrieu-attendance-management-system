@@ -29,7 +29,6 @@ public class EmployeeStatsSummaryDTO {
         this.totalWorkDays = totalWorkDays;
         this.lateCount = lateCount;
     }
-
     public EmployeeStatsSummaryDTO(Long employeeId,
                                    String employeeName,
                                    String departmentName,

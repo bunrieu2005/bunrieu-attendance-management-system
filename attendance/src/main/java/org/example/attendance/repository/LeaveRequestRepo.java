@@ -15,4 +15,5 @@ public interface LeaveRequestRepo extends JpaRepository<LeaveRequest,Long> {
     List<LeaveRequest> findByEmployeeIdOrderByStartDateDesc(Long employeeId);
 
     List<LeaveRequest> findAllByOrderByStartDateDesc();
+
 }

@@ -32,8 +32,6 @@ public class CheckinService {
 Employee emp = employeeRepo.findById(empId) //select * from employees where id =5
         .orElseThrow(() -> new IllegalArgumentException("employee not found :{400 bad request}"));
 LocalDate today = LocalDate.now();
-
-
 //cách 3 :// --- ĐOẠN MỚI THÊM: DỌN DẸP RIÊNG CHO NV NÀY TRƯỚC KHI CHECKIN ---
 //        // Tìm xem ông này có bản ghi nào chưa checkout mà KHÔNG PHẢI HÔM NAY không?
 //        List<Attendance> oldRecords = attendanceRepo.findByEmployeeIdAndCheckOutAtIsNull(empId);
