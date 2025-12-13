@@ -55,8 +55,12 @@ public class SecurityConfig {
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
                                 .requestMatchers("/api/auth/**").permitAll()
+
+
+                                .requestMatchers("/api/salary-details/**").permitAll()
+                                .requestMatchers("/api/payroll/**").permitAll()
+                                // --------------------------------------------
 
                                 .requestMatchers("/api/**").permitAll()
 
@@ -70,7 +74,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

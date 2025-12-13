@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name="payslips")
 @Data
@@ -15,10 +17,10 @@ public class Payslip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="month")
-    private int month;
-    @Column(name="year")
-    private int year;
+    @Column(name="startDate")
+    private LocalDate startDate;
+    @Column(name="endDate")
+    private LocalDate endDate;
 
 
     @Column(name ="total_work_days")

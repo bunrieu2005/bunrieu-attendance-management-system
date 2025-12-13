@@ -90,4 +90,19 @@ public interface AttendanceRepo extends JpaRepository<Attendance,Long> {
 
     @Query("SELECT COUNT(DISTINCT a.employee.id) FROM Attendance a WHERE a.lateFlag > 0 AND a.workDate BETWEEN :startDate AND :endDate")
     long countLateEmployees(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+
+    // payroll
+
+    @Query("SELECT COALESCE(SUM(a.totalMinutes), 0) FROM Attendance a WHERE a.employee.id = :empId AND a.workDate BETWEEN :startDate AND :endDate")
+    long sumTotalMinutesInMonth(@Param("empId") Long empId,
+                                @Param("startDate") LocalDate startDate,
+                                @Param("endDate") LocalDate endDate);
+
+
+
+    @Query("SELECT COALESCE(SUM(a.lateFlag), 0) FROM Attendance a WHERE a.employee.id = :empId AND a.workDate BETWEEN :startDate AND :endDate")
+    long countLateTimesInMonth(@Param("empId") Long empId,
+                               @Param("startDate") LocalDate startDate,
+                               @Param("endDate") LocalDate endDate);
 }
