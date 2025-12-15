@@ -55,7 +55,7 @@ public class DashboardController {
 
                     return map;
                 })
-                .collect(Collectors.toList()); // gom map tra json
+                .collect(Collectors.toList()); // gom map tra json  
         return ResponseEntity.ok(result);
     }
     //employees offline

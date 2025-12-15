@@ -1,6 +1,6 @@
     package org.example.attendance.enums;
 
-    public enum LeaveType {
+    public enum     LeaveType {
         ANNUAL,      // offline/year
         SICK,        // offline/sick
         UNPAID,      // offline/nomney

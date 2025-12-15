@@ -37,17 +37,12 @@ public class PayrollController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
-
-
     @GetMapping("/history/{empId}")
     public ResponseEntity<List<PayslipDTO>> getPayslipHistory(@PathVariable Long empId) {
-
         List<Payslip> listEntity = payslipRepo.findByEmployeeIdOrderByStartDateDesc(empId);
-
         List<PayslipDTO> listDTO = listEntity.stream()
                 .map(payslipMapper::toDTO)
                 .collect(Collectors.toList());
-
         return ResponseEntity.ok(listDTO);
     }
 }

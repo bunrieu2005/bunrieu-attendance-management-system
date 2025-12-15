@@ -29,9 +29,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AttendanceController {
 
-
-    @Autowired
-    private FaceRecognitionService faceService;
     @Autowired
     private EmployeeRepo employeeRepo;
     @Autowired
@@ -124,46 +121,4 @@ public class AttendanceController {
         return ResponseEntity.ok(dto);
     }
 
-
-    @PostMapping("/check-in/face")
-    public ResponseEntity<?> checkInByFace(@RequestParam("image") MultipartFile image,
-                                           HttpServletRequest request) {
-
-        Long recognizedId = null;
-
-        try {
-            FaceVerifyResponse result = faceService.verifyFace(image);
-
-            if (!result.isSuccess()) {
-                return ResponseEntity.status(401).body("\n" +
-                        "inappropriate face");
-            }
-
-            recognizedId = Long.valueOf(result.getEmployeeId());
-            String clientIp = request.getRemoteAddr();
-
-            Attendance attendance = checkinService.checkIn(recognizedId, clientIp, "FACE");
-            return ResponseEntity.ok(attendance);
-
-        } catch (IllegalStateException e) {
-            Map<String, String> response = new HashMap<>();
-
-
-            if (recognizedId != null) {
-                Employee emp = employeeRepo.findById(recognizedId).orElse(null);
-                String name = (emp != null) ? emp.getName() : "employee";
-                response.put("employeeName", name);
-            } else {
-                response.put("employeeName", "Bạn");
-            }
-
-            response.put("message", "Hôm nay đã check-in rồi");
-            return ResponseEntity.status(409).body(response);
-
-        } catch (SecurityException e) {
-            return ResponseEntity.status(403).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("erro: " + e.getMessage());
-        }
-    }
 }
