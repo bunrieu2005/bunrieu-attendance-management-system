@@ -18,7 +18,7 @@ This backend system handles the complex business logic for the Attendance System
 
 ## Python AI Service Integration
 The system offloads heavy image processing tasks to a specialized Python Service.
-* Core Library: Built on top of the face_recognition library (utilizing dlib's state-of-the-art face recognition).
+* Core Library: Built on top of the [face_recognition](https://github.com/ageitgey/face_recognition) library (utilizing dlib's state-of-the-art face recognition).
 * Technologies: Python 3.x, Flask, OpenCV, Numpy.
 * Mechanism:
     1. Receives image from Spring Boot.
