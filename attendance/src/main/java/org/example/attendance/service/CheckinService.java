@@ -24,7 +24,7 @@ public class CheckinService {
             "0:0:0:0:0:0:0:1",
             "192.168.1.100"
     );
-    @Transactional// delete complete->create
+    @Transactional// All or Nothing
         public Attendance checkIn(Long empId, String ip, String method) {
             if (!ALLOWED_IPS.contains(ip)) {
                 throw new SecurityException("no accept  check in at ip : " + ip);

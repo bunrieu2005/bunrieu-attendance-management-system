@@ -24,9 +24,9 @@ public class PayrollService {
 
 
         Employee emp = employeeRepo.findById(employeeId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên ID: " + employeeId));
+                .orElseThrow(() -> new RuntimeException("not found employeed id: " + employeeId));
         SalaryDetail salaryDetail = salaryDetailRepo.findByEmployeeId(employeeId)
-                .orElseThrow(() -> new RuntimeException("Nhân viên chưa được cấu hình lương"));
+                .orElseThrow(() -> new RuntimeException("employeed config salary not fonnd"));
 
         long totalMinutes = attendanceRepo.sumTotalMinutesInMonth(employeeId, startDate, endDate);
         long totalLateTimes = attendanceRepo.countLateTimesInMonth(employeeId, startDate, endDate);

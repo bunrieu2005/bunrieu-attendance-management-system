@@ -43,20 +43,16 @@ public class CheckinController {
     }
 
 
-
     @PostMapping("/check-in/face")
-    public ResponseEntity<?> checkInByFace(@RequestParam("image") MultipartFile image,
-                                           HttpServletRequest request) {
+    public ResponseEntity<?> checkInByFace(@RequestParam("image") MultipartFile image, HttpServletRequest request) {
         Long recognizedId = null;
         try {
             FaceVerifyResponse result = faceService.verifyFace(image);
             if (!result.isSuccess()) {
-                return ResponseEntity.status(401).body("Khuôn mặt không hợp lệ");
+                return ResponseEntity.status(401).body("Face not recognized");
             }
-
             recognizedId = Long.valueOf(result.getEmployeeId());
             String clientIp = getClientIp(request);
-
             Attendance attendance = checkinService.checkIn(recognizedId, clientIp, "FACE");
             return ResponseEntity.ok(attendance);
 
