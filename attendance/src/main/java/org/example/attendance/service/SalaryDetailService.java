@@ -36,7 +36,6 @@ public class SalaryDetailService {
             return dto;
         }).collect(Collectors.toList());
     }
-
     public SalaryDetail updateSalary(SalaryDetailDTO dto) {
         SalaryDetail salary = salaryDetailRepo.findByEmployeeId(dto.getEmployeeId())
                 .orElse(new SalaryDetail());

@@ -60,7 +60,6 @@ public class AttendanceCleanupService {
         attendanceRepo.saveAll(staleRecords);
         System.out.println("successfully auto-closed " + staleRecords.size() + " records.");
     }
-
     private void executeCleanup() {
         LocalDate today = LocalDate.now();
         // searach attent null checkout and day < today
