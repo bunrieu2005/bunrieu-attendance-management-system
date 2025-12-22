@@ -93,9 +93,13 @@ public class EmployeeController {
         return ResponseEntity.ok(dtos);
     }
     private String saveImage(MultipartFile file, Long empId) throws Exception {
-        String uploadDir = "src/main/resources/static/images/avatars/";
+
+        String uploadDir = "D:/attendance_img/";
+
         String fileName = empId + "_" + StringUtils.cleanPath(file.getOriginalFilename());
+
         Path uploadPath = Paths.get(uploadDir);
+
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
@@ -104,7 +108,7 @@ public class EmployeeController {
             Path filePath = uploadPath.resolve(fileName);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         }
-        return "/images/avatars/" + fileName;
+        return fileName;
     }
   // add employee for bcyrps
   @PostMapping(consumes = { "multipart/form-data" })

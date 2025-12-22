@@ -21,10 +21,4 @@ public class DepartmentStatsDTO {
     }
 
 
-    public DepartmentStatsDTO(String departmentName, Long totalEmployees, Integer totalHours, Long totalLate) {
-        this.departmentName = departmentName;
-        this.totalEmployees = totalEmployees;
-        this.totalHours = totalHours == null ? 0.0 : totalHours.doubleValue();
-        this.totalLate = totalLate;
-    }
 }

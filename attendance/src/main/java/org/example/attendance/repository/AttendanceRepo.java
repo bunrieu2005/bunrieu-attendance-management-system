@@ -35,15 +35,6 @@ public interface AttendanceRepo extends JpaRepository<Attendance,Long> {
             LocalDate startDate,
             LocalDate endDate
     );
-
-    List<Attendance> findByEmployeeIdInOrderByWorkDateDesc(List<Long> employeeIds);
-
-    List<Attendance> findByEmployeeIdInAndWorkDateBetweenOrderByEmployeeIdAscWorkDateDesc(
-            List<Long> employeeIds,
-            LocalDate startDate,
-            LocalDate endDate
-    );
-
     // new funtion: all record checkout = null < today -> delete checkin
     List<Attendance> findAllByCheckOutAtIsNullAndWorkDateBefore(LocalDate date);
 
