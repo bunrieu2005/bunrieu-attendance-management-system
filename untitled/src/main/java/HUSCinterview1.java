@@ -1,38 +1,27 @@
-void main() {
+// [JDK] - Bước 1: Để có được file này, bạn cần JDK (javac) để biên dịch code.
+// Nếu không có JDK, máy tính không hiểu file văn bản này là gì.
 
+public class HUSCinterview1 {
 
+    // [JVM] - Bước 2: Khi bạn gõ lệnh 'java HUSCinterview1',
+    // JVM (Máy ảo) sẽ tìm ngay hàm 'main' này để bắt đầu chạy chương trình.
+    public static void main(String[] args) {
 
-    // JRE cung cap cac thu vien san co (vi du: System, Runtime) de code chay duoc.
-    IO.println("\n[1] Thong tin JRE (Moi truong chay):");
+        // [JRE] - Thư viện:
+        // 'System' và 'String' là các lớp có sẵn nằm trong thư viện của JRE.
+        // Bạn không cần viết ra chúng, JRE cung cấp sẵn để bạn dùng.
+        String thongDiep = "Chao mung ban den voi HUSC";
 
-    // Lay thong tin tu he thong (System Properties)
-    String javaVersion = System.getProperty("java.version");
-    String javaHome = System.getProperty("java.home");
-    String javaVendor = System.getProperty("java.vendor");
+        // [JVM] - Thực thi:
+        // JVM nhận lệnh này, dịch sang ngôn ngữ máy và điều khiển màn hình in ra dòng chữ.
+        System.out.println(thongDiep);
 
-    IO.println(" - Phien ban Java: " + javaVersion);
-    IO.println(" - Nha cung cap: " + javaVendor);
-    IO.println(" - Duong dan cai dat JRE: " + javaHome);
+        // [JVM] - Quản lý bộ nhớ:
+        // Khi dòng lệnh này chạy, JVM sẽ cấp phát RAM để lưu biến 'namKinhNghiem'.
+        int namKinhNghiem = 5;
 
-    // 2. PHAN MEM: DEMO VAI TRO CUA JVM (Java Virtual Machine)
-    // JVM quan ly bo nho va thuc thi code. Doan nay lay thong tin bo nho JVM.
-    IO.println("\n[2] Thong tin JVM (May ao Java):");
-
-    Runtime runtime = Runtime.getRuntime();
-    long maxMemory = runtime.maxMemory(); // Bo nho toi da JVM duoc cap
-    long totalMemory = runtime.totalMemory(); // Bo nho hien tai dang dung
-
-    // Doi tu Byte sang Megabyte (MB) cho de doc
-    long maxMemoryMB = maxMemory / (1024 * 1024);
-    long totalMemoryMB = totalMemory / (1024 * 1024);
-
-    IO.println(" - Bo nho toi da (Max Heap): " + maxMemoryMB + " MB");
-    IO.println(" - Bo nho dang cap phat: " + totalMemoryMB + " MB");
-    IO.println(" -> JVM dang hoat dong tot de xu ly cac lenh nay!");
-
-    // 3. LY THUYET: VAI TRO CUA JDK (Java Development Kit)
-    // JDK khong xuat hien khi chay (run), no xuat hien luc bien dich (compile).
-    IO.println("\n[3] Vay JDK dau?");
-    IO.println(" - Neu ban thay dong chu nay, tuc la JDK da hoan thanh nhiem vu.");
-    IO.println(" - JDK da dung 'javac' de bien dich file .java thanh .class truoc khi ban chay lenh nay.");
+        // [JRE] + [JVM] kết hợp:
+        // JRE cung cấp hàm in (println), còn JVM thực hiện việc in số 5 ra màn hình.
+        System.out.println("Kinh nghiem: " + namKinhNghiem + " nam.");
+    }
 }
