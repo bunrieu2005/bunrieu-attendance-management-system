@@ -5,6 +5,7 @@ import org.example.attendance.dto.PayslipDTO;
 import org.example.attendance.entity.Payslip;
 import org.example.attendance.mapper.PayslipMapper;
 import org.example.attendance.repository.PayslipRepo;
+import org.example.attendance.service.PaymentService;
 import org.example.attendance.service.PayrollService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class PayrollController {
 
     private final PayrollService payrollService;
+    private final PaymentService paymentService;
     private final PayslipRepo payslipRepo;
     private final PayslipMapper payslipMapper;
 
@@ -44,5 +46,14 @@ public class PayrollController {
                 .map(payslipMapper::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(listDTO);
+    }
+    @PostMapping("/pay/{payslipId}")
+    public ResponseEntity<?> paySalary(@PathVariable Long payslipId) {
+        try {
+            String result = paymentService.paySalary(payslipId);
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
