@@ -27,4 +27,7 @@ public class PayslipDTO {
     private Long employeeId;
     private String employeeName;
     private String departmentName;
+
+    private String bankName;
+    private String bankAccountNumber;
 }
