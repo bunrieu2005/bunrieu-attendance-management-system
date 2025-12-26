@@ -17,4 +17,5 @@ public interface PayslipRepo extends JpaRepository<Payslip, Long> {
     
     List<Payslip> findByEmployeeIdOrderByStartDateDesc(Long employeeId);
 
+    List<Payslip> findByEmployeeId(Long empId);
 }
