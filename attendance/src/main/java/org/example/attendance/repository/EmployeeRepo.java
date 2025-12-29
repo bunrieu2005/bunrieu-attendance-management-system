@@ -20,4 +20,6 @@ public interface EmployeeRepo extends JpaRepository<Employee,Long> {
     long countByGender(String gender);
 
     long countByHireDateBetween(LocalDate startDate, LocalDate endDate);
+
+    List<Employee> findByDepartmentId(Long targetId);
 }

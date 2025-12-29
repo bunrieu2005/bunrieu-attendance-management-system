@@ -22,6 +22,9 @@ public class LeaveRequestService {
     private final EmployeeRepo employeeRepo;
     private final LeaveRequestMapper leaveRequestMapper;
 
+    // 1. Inject NotificationService
+    private final NotificationService notificationService;
+
     @Transactional
     public LeaveRequestDTO createLeaveRequest(LeaveRequestDTO dto) {
         if (dto.getEndDate().isBefore(dto.getStartDate())) {
@@ -57,9 +60,24 @@ public class LeaveRequestService {
     public LeaveRequest updateStatus(Long id, LeaveStatus newStatus) {
         LeaveRequest request = leaveRequestRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Leave request not found"));
-
         request.setStatus(newStatus);
-        return leaveRequestRepo.save(request);
+        LeaveRequest savedRequest = leaveRequestRepo.save(request);
+
+        Long employeeId = request.getEmployee().getId();
+        String startDateStr = request.getStartDate().toString();
+
+        String message = "";
+
+        if (newStatus == LeaveStatus.APPROVED) {
+            message = " leave request from date  " + startDateStr + " hs been APPROVED.";
+        } else if (newStatus == LeaveStatus.REJECTED) {
+            message = " leave request fromt date " + startDateStr + " hs been REJECTED.";
+        }
+        if (!message.isEmpty()) {
+            notificationService.sendNotification(employeeId, message);
+        }
+
+        return savedRequest;
     }
 
     @Transactional

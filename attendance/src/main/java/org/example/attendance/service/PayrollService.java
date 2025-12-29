@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import java.time.format.DateTimeFormatter;
 @Service
 @RequiredArgsConstructor
 public class PayrollService {
@@ -20,7 +20,7 @@ public class PayrollService {
     private final PayslipRepo payslipRepo;
     private final EmployeeRepo employeeRepo;
     private final AttendanceRepo attendanceRepo;
-
+    private final NotificationService notificationService;
     @Transactional
     public PayslipDTO calculateSalary(Long employeeId, LocalDate startDate, LocalDate endDate) {
         Employee emp = employeeRepo.findById(employeeId)
@@ -76,6 +76,16 @@ public class PayrollService {
                 .orElseThrow(() -> new RuntimeException("Payslip not found"));
         payslip.setStatus("PAID");
         payslipRepo.save(payslip);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String startStr = payslip.getStartDate().format(formatter);
+        String endStr = payslip.getEndDate().format(formatter);
+        notificationService.createNotification(
+                payslip.getEmployee().getId(),
+                "SALARY HAS BEEN PAID",
+                "SALARY turn " + startStr + " - " + endStr + " has been transferred. Please check your account",
+                "SALARY",
+                payslip.getId()
+        );
     }
 
     private PayslipDTO toDTO(Payslip entity) {
