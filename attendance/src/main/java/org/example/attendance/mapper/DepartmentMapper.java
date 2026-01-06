@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DepartmentMapper {
+
+    private DepartmentMapper() {
+        // Utility class; prevent instantiation
+    }
     public static DepartmentDTO toDTO(Department department) {
         DepartmentDTO dto = new DepartmentDTO();
         dto.setId(String.valueOf(department.getId()));
@@ -14,7 +18,7 @@ public class DepartmentMapper {
         dto.setDescription(department.getDescription());
         return dto;
     }
-    public  static  List<DepartmentDTO> toDTOList(List<Department> departments) {
+    public static List<DepartmentDTO> toDTOList(List<Department> departments) {
         return departments.stream()
                 .map(DepartmentMapper::toDTO)
                 .collect(Collectors.toList());

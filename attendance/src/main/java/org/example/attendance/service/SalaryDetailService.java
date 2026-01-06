@@ -6,6 +6,7 @@ import org.example.attendance.entity.Employee;
 import org.example.attendance.entity.SalaryDetail;
 import org.example.attendance.repository.EmployeeRepo;
 import org.example.attendance.repository.SalaryDetailRepo;
+import org.example.attendance.mapper.SalaryDetailMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,18 +23,8 @@ public class SalaryDetailService {
         List<Employee> employees = employeeRepo.findAll();
 
         return employees.stream().map(emp -> {
-            SalaryDetail salary = salaryDetailRepo.findByEmployeeId(emp.getId()).orElse(new SalaryDetail());
-
-            SalaryDetailDTO dto = new SalaryDetailDTO();
-            dto.setEmployeeId(emp.getId());
-            dto.setEmployeeName(emp.getName());
-            dto.setDepartmentName(emp.getDepartment() != null ? emp.getDepartment().getName() : "N/A");
-            dto.setBaseSalary(salary.getBaseSalary() != null ? salary.getBaseSalary() : 0.0);
-            dto.setAllowance(salary.getAllowance() != null ? salary.getAllowance() : 0.0);
-            dto.setBankName(salary.getBankName() != null ? salary.getBankName() : "");
-            dto.setBankAccountNumber(salary.getBankAccountNumber() != null ? salary.getBankAccountNumber() : "");
-
-            return dto;
+            SalaryDetail salary = salaryDetailRepo.findByEmployeeId(emp.getId()).orElse(null);
+            return SalaryDetailMapper.toDTO(emp, salary);
         }).collect(Collectors.toList());
     }
     public SalaryDetail updateSalary(SalaryDetailDTO dto) {
@@ -44,10 +35,7 @@ public class SalaryDetailService {
             salary.setEmployee(emp);
         }
 
-        salary.setBaseSalary(dto.getBaseSalary());
-        salary.setAllowance(dto.getAllowance());
-        salary.setBankName(dto.getBankName());
-        salary.setBankAccountNumber(dto.getBankAccountNumber());
+        SalaryDetailMapper.updateEntityFromDTO(dto, salary);
 
         return salaryDetailRepo.save(salary);
     }

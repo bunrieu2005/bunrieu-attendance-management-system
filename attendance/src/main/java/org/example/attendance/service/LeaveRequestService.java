@@ -69,9 +69,9 @@ public class LeaveRequestService {
         String message = "";
 
         if (newStatus == LeaveStatus.APPROVED) {
-            message = " leave request from date  " + startDateStr + " hs been APPROVED.";
+            message = "Leave request from date " + startDateStr + " has been APPROVED.";
         } else if (newStatus == LeaveStatus.REJECTED) {
-            message = " leave request fromt date " + startDateStr + " hs been REJECTED.";
+            message = "Leave request from date " + startDateStr + " has been REJECTED.";
         }
         if (!message.isEmpty()) {
             notificationService.sendNotification(employeeId, message);

@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class EmployeeMapper {
+
+    private EmployeeMapper() {
+        // Utility class; prevent instantiation
+    }
     public static EmployeeDTO toDTO(Employee employee) {
 
         if (employee == null) {

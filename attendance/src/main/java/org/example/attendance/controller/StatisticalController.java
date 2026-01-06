@@ -2,7 +2,6 @@ package org.example.attendance.controller;
 
 import lombok.RequiredArgsConstructor;
 
-
 import org.example.attendance.dto.DepartmentStatsDTO;
 import org.example.attendance.dto.EmployeeStatsSummaryDTO;
 import org.example.attendance.dto.GeneralStatsDTO;
@@ -35,7 +34,6 @@ public class StatisticalController {
 
         return ResponseEntity.ok(statisticalService.getStatsByEmployee(startDate, endDate));
     }
-    // ...
     @GetMapping("/general")
     public ResponseEntity<GeneralStatsDTO> getGeneralStats(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
