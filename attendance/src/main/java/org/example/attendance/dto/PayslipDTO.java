@@ -17,6 +17,9 @@ public class PayslipDTO {
     private double totalWorkDays;
     private double totalLateMinutes;
 
+    private Double baseSalary;
+    private Double allowance;
+
     private Double grossSalary;
     private Double deduction;
     private Double bonus;

@@ -114,13 +114,20 @@ public class PayrollService {
                 dto.setDepartmentName("N/A");
             }
 
+
             SalaryDetail config = salaryDetailRepo.findByEmployeeId(entity.getEmployee().getId())
                     .orElse(null);
 
             if (config != null) {
+                dto.setBaseSalary(config.getBaseSalary() != null ? config.getBaseSalary() : 0.0);
+                dto.setAllowance(config.getAllowance() != null ? config.getAllowance() : 0.0);
+                // -----------------------
+
                 dto.setBankName(config.getBankName());
                 dto.setBankAccountNumber(config.getBankAccountNumber());
             } else {
+                dto.setBaseSalary(0.0);
+                dto.setAllowance(0.0);
                 dto.setBankName("");
                 dto.setBankAccountNumber("");
             }

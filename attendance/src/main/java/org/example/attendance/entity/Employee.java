@@ -50,5 +50,6 @@ public class Employee {
     private List<LoginHistory>  loginHistories;
     @Column(columnDefinition = "TEXT")
     private String faceEmbedding;
-
+    @OneToOne(mappedBy = "employee")
+    private SalaryDetail salaryDetail;
 }

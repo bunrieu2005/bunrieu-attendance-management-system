@@ -25,17 +25,19 @@ public class PayslipMapper {
         dto.setRealSalary(entity.getRealSalary());
         dto.setStatus(entity.getStatus());
 
-        if (entity.getEmployee() != null) {
-            dto.setEmployeeId(entity.getEmployee().getId());
-            dto.setEmployeeName(entity.getEmployee().getName());
 
-            if (entity.getEmployee().getDepartment() != null) {
-                dto.setDepartmentName(entity.getEmployee().getDepartment().getName());
-            } else {
-                dto.setDepartmentName("N/A");
-            }
+        if (entity.getEmployee() != null && entity.getEmployee().getSalaryDetail() != null) {
+
+            Double base = entity.getEmployee().getSalaryDetail().getBaseSalary();
+            Double allow = entity.getEmployee().getSalaryDetail().getAllowance();
+
+            dto.setBaseSalary(base != null ? base : 0.0);
+            dto.setAllowance(allow != null ? allow : 0.0);
+
+        } else {
+            dto.setBaseSalary(0.0);
+            dto.setAllowance(0.0);
         }
-
         return dto;
     }
 }
